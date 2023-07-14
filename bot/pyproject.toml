@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "bot"
+version = "0.1.0"
+description = ""
+authors = ["Александр Лыо <al.lyo@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+flake8 = "^6.0.0"
+python-telegram-bot = {extras = ["ext"], version = "^20.3"}
+requests = "^2.31.0"
+python-dotenv = "^1.0.0"
+aiohttp = "^3.8.4"
+asyncio = "^3.4.3"
+selenium = "^4.10.0"
+chromedriver-py = "^114.0.5735.90"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
