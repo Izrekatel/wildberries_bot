@@ -1,16 +1,34 @@
-# wildberries_bot_team_3
+# wildberries_bot
+
+# Автор проекта
+Гельруд Борис (https://github.com/Izrekatel/)
+
+## Описание проекта:
+"wildberries_bot" - это телеграм бот, с помощью которого подписчик целевого канала
+может отслеживать позиции на сайте wildberries.ru, формировать отчет остатков по позициям и складам,
+Проект состоит из telegram-бота, бэкенда на Django, базы данных на postgresql. Все управляется через
+сервер NGNIX.
+
+## Стек:
+- Python
+- PostgreSQL
+- Nginx
+- Django
+- Git
+- Docker
+- Poetry
+- Pre-commit
+- Python-telegram-bot
+- Aiohttp
+- Asyncio
+- Selenium
 
 
 ## Подготовка
 
-### 1. Установка poetry и запуск виртауального окружения
-Важно: poetry ставится и запускается для каждого сервиса отдельно.
+### 1. Установка для локальной разработки
 
-1. Перейти в одну из папок сервиса, например:
-```bash
-cd bot
-```
-2. Затем выполните команды:
+1. Установите Poetry
 
 Для Linux, macOS, Windows (WSL):
 ```bash
@@ -39,6 +57,10 @@ $Env:Path += ";C:\Users\borisgelrud\AppData\Roaming\Python\Scripts"; setx PATH "
 ```bash
 poetry --version
 ```
+Опционально! Изменить местонахождение окружения в папке проекта
+```bash
+poetry config virtualenvs.in-project true
+```
 
 Установка автодополнений bash (опцонально)
 ```bash
@@ -50,9 +72,17 @@ poetry completions bash >> ~/.bash_completion
 poetry env use python3.11
 ```
 
+2. Установите виртуальное окружение
+Важно: poetry ставится и запускается для каждого сервиса отдельно.
+
+Перейти в одну из папок сервиса, например:
+```bash
+cd bot
+```
+
 Установка зависимостей (для разработки)
 ```bash
-poetry install --with dev
+poetry install
 ```
 
 Запуск оболочки и активация виртуального окружения
@@ -71,7 +101,7 @@ poetry env list
 * Настройка для pycharm: https://www.jetbrains.com/help/pycharm/poetry.html
 
 
-### 2. Установка pre-commit
+3. Установка pre-commit
 
 Модуль pre-commit уже добавлен в lock, таким образом после настройки виртуального окружения, должен установится автоматически.
 Проверить установку pre-commit можно командой (при активированном виртуальном окружении):
@@ -85,7 +115,7 @@ pre-commit --version
 poetry add pre-commit
 ```
 
-### 3. Установка hook
+4. Установка hook
 
 Установка осуществляется hook командой
 ```bash
@@ -95,13 +125,39 @@ pre-commit install --all
 В дальнейшем при выполнении команды `git commit` будут выполняться проверки перечисленные в файле `.pre-commit-config.yaml`.
 
 
-## Запуск базы
+5. Запуск базы
 
-1. Создать .env файл из env.example
+#### 1. Создать .env файл из env.example (в папках bot, expert_system и в корневой)
 
-2. Запустить Docker
+#### 2. Запустить Docker
 
-3. Поднимаем контейнер с базой Postgres:
+#### 3. Изменить значение DB_HOST на "localhost" в .env (в папках expert_system и в корневой)
+
+#### 4. Поднимаем контейнер с базой Postgres:
 ```bash
 docker-compose -f postgres-local.yaml up -d --build
+```
+
+### 2. Запуск проекта в контейнерах Docker
+
+#### 1. Создать .env файл из env.example (в папках bot, expert_system и в корневой)
+
+#### 2. Запустить Docker
+
+#### 4. Поднимаем контейнеры:
+```bash
+docker-compose up -d --build
+```
+### Локальные адреса проекта:
+Главная страница
+```
+http://127.0.0.1/
+```
+Админка Django
+```
+http://127.0.0.1/admin/
+```
+Адрес API
+```
+http://127.0.0.1/api/
 ```

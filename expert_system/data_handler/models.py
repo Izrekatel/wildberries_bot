@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Base(models.Model):
-    """Абстрактная модель. Добавляет дату создания."""
+    """Абстрактная модель. Добавляет ID и дату создания."""
     id = models.AutoField(primary_key=True)
     add_time = models.DateTimeField(
         verbose_name='Время добавления',
