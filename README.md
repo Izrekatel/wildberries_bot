@@ -43,7 +43,7 @@ curl -sSL https://install.python-poetry.org | python3 -
 
 В macOS и Windows сценарий установки предложит добавить папку с исполняемым файлом poetry в переменную PATH. Сделайте это, выполнив следующую команду:
 
-macOS (не забудьте поменять jetbrains на имя вашего пользователя)
+macOS (не забудьте поменять borisgelrud на имя вашего пользователя)
 ```bash
 export PATH="/Users/borisgelrud/.local/bin:$PATH"
 ```
