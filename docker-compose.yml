@@ -52,7 +52,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     env_file:
-      - ./expert_system/.env
+      - ./.env
     deploy:
       resources:
         limits:

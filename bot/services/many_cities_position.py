@@ -1,10 +1,11 @@
-from multiprocessing import Process, Manager
 import asyncio
 import sys
 import time
 import urllib.parse
+from multiprocessing import Manager, Process
 
 from chromedriver_py import binary_path
+from constants import constant
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
@@ -13,43 +14,38 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
-from constants import constant
-
 
 def prepare_url(search_phrase):
     """Подготавливает поисковой запрос для браузера"""
 
     url = urllib.parse.urljoin(
-        constant.MAIN_URL,
-        '/catalog/0/search.aspx?search='
-        + search_phrase
+        constant.MAIN_URL, "/catalog/0/search.aspx?search=" + search_phrase
     )
     return url
 
 
 def start_search(url, browser):
-    """Открываем браузер с переданной страницей для начала поиска """
+    """Открываем браузер с переданной страницей для начала поиска"""
     """и ждём (BROWSER_LOADING_TIME) секунд для прогрузки страницы"""
     browser.get(url)
     time.sleep(constant.BROWSER_LOADING_TIME)
 
 
 def prepare_city(city, browser):
-    browser.get("https://www.wildberries.ru")
+    browser.get(constant.MAIN_URL)
     time.sleep(constant.BROWSER_LOADING_TIME)
 
     try:
         geo_city = browser.find_element(
             By.CLASS_NAME,
             "simple-menu__link.simple-menu__link--address."
-            "j-geocity-link.j-wba-header-item"
+            "j-geocity-link.j-wba-header-item",
         )
         geo_city.click()
         time.sleep(constant.GEO_LOADING_TIME)
 
         search_input = browser.find_element(
-            By.CLASS_NAME,
-            "ymaps-2-1-79-searchbox-input__input"
+            By.CLASS_NAME, "ymaps-2-1-79-searchbox-input__input"
         )
         search_input.send_keys(city)
         search_input.send_keys(Keys.ENTER)
@@ -57,15 +53,13 @@ def prepare_city(city, browser):
 
         geo_list = browser.find_element(By.ID, "pooList")
         first_item = geo_list.find_element(
-            By.CLASS_NAME,
-            "address-item.j-poo-option"
+            By.CLASS_NAME, "address-item.j-poo-option"
         )
         first_item.click()
         time.sleep(constant.BROWSER_LOADING_TIME)
 
         select_button = browser.find_element(
-            By.XPATH,
-            "//button[text()='Выбрать']"
+            By.XPATH, "//button[text()='Выбрать']"
         )
         select_button.click()
         time.sleep(constant.BROWSER_LOADING_TIME)
@@ -86,20 +80,20 @@ def get_full_page(browser):
         if browser.execute_script(
             "return (window.innerHeight + window.scrollY) >= "
             "document.body.scrollHeight;"
-         ):
+        ):
             break
 
 
 def palace_in_search(article, browser):
-    """Находит артикул на странице и возвращает его порядковый номер """
+    """Находит артикул на странице и возвращает его порядковый номер"""
     """или None"""
-    goods = browser.find_element(By.CLASS_NAME, 'product-card-list')
-    goods_list = goods.find_elements(By.CSS_SELECTOR, 'article')
+    goods = browser.find_element(By.CLASS_NAME, "product-card-list")
+    goods_list = goods.find_elements(By.CSS_SELECTOR, "article")
     articles = list(
-        int(good.get_attribute('data-nm-id')) for good in goods_list
+        int(good.get_attribute("data-nm-id")) for good in goods_list
     )
     if article in articles:
-        return goods_list.index(goods.find_element(By.ID, f'c{article}')) + 1
+        return goods_list.index(goods.find_element(By.ID, f"c{article}")) + 1
 
 
 def find_next_page_button(browser):
@@ -109,7 +103,7 @@ def find_next_page_button(browser):
         element = browser.find_element(
             By.XPATH,
             '//a[contains(@class, "pagination-next pagination__next '
-            'j-next-page") and contains(text(), "Следующая страница")]'
+            'j-next-page") and contains(text(), "Следующая страница")]',
         )
         href = element.get_attribute("href")
         if href:
@@ -167,7 +161,7 @@ def full_search(search_phrase, article, city, browser):
 def run_browser(city, article, search_phrase, stocks):
     service = Service(executable_path=binary_path)
     chrome_options = Options()
-    chrome_options.add_argument('--blink-settings=imagesEnabled=false')
+    chrome_options.add_argument("--blink-settings=imagesEnabled=false")
     chrome_options.add_argument("--window-size=1280,720")
     browser = webdriver.Chrome(service=service, options=chrome_options)
 
@@ -176,7 +170,7 @@ def run_browser(city, article, search_phrase, stocks):
 
 
 async def run_processes(article, search_phrase):
-    """Создаём асинхронную функцию, которая формирует список процессов """
+    """Создаём асинхронную функцию, которая формирует список процессов"""
     """и запускает их"""
     manager = Manager()
     stocks = manager.list()
@@ -184,8 +178,7 @@ async def run_processes(article, search_phrase):
 
     for city in constant.CITY.values():
         process = Process(
-            target=run_browser,
-            args=(city, article, search_phrase, stocks)
+            target=run_browser, args=(city, article, search_phrase, stocks)
         )
         process.start()
         processes.append(process)
@@ -198,9 +191,10 @@ async def run_processes(article, search_phrase):
 
 async def main():
     article = 154181703
-    search_phrase = 'ветровка весенняя бомбер'
+    search_phrase = "ветровка весенняя бомбер"
 
     await run_processes(article, search_phrase)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     asyncio.run(main())
