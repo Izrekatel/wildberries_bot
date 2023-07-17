@@ -5,7 +5,6 @@ import urllib.parse
 from multiprocessing import Manager, Process
 
 from chromedriver_py import binary_path
-from constants import constant
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.options import Options
@@ -13,6 +12,8 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+
+from constants import constant
 
 
 def prepare_url(search_phrase):
