@@ -1,5 +1,10 @@
+from data_handler.models import (
+    RequestPosition,
+    RequestRate,
+    RequestStock,
+    TelegramUser,
+)
 from rest_framework import serializers
-from data_handler.models import RequestPosition, RequestStock, RequestRate
 
 
 class RequestPositionSerializer(serializers.ModelSerializer):
@@ -8,7 +13,7 @@ class RequestPositionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RequestPosition
-        fields = ('articul', 'text')
+        fields = ("articul", "text")
 
     def validate(self, attrs):
         if self.context["request"].method != "POST":
@@ -23,7 +28,7 @@ class RequestStockSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RequestStock
-        fields = ('articul',)
+        fields = ("articul",)
 
     def validate(self, attrs):
         if self.context["request"].method != "POST":
@@ -38,11 +43,26 @@ class RequestRateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RequestRate
-        fields = ('warehouse_id',)
+        fields = ("warehouse_id",)
 
     def validate(self, attrs):
         if self.context["request"].method != "POST":
             return attrs
         if RequestRate.objects.filter(**attrs).exists():
+            raise serializers.ValidationError("This object already exists")
+        return attrs
+
+
+class TelegramUserSerializer(serializers.ModelSerializer):
+    user_id = serializers.IntegerField()
+
+    class Meta:
+        model = TelegramUser
+        fields = ("user_id",)
+
+    def validate(self, attrs):
+        if self.context["request"].method != "POST":
+            return attrs
+        if TelegramUser.objects.filter(**attrs).exists():
             raise serializers.ValidationError("This object already exists")
         return attrs

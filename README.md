@@ -23,10 +23,31 @@
 - Asyncio
 - Selenium
 
+### 1. Запуск проекта в контейнерах Docker
 
-## Подготовка
+#### 1. Создать .env файл из env.example (в папках bot, expert_system и в корневой)
 
-### 1. Установка для локальной разработки
+#### 2. Запустить Docker
+
+#### 4. Поднимаем контейнеры:
+```bash
+docker-compose up -d --build
+```
+#### 5. Локальные адреса проекта:
+Главная страница
+```
+http://127.0.0.1/
+```
+Админка Django
+```
+http://127.0.0.1/admin/
+```
+Адрес API
+```
+http://127.0.0.1/api/
+```
+
+### 2. Установка для локальной разработки
 
 1. Установите Poetry
 
@@ -125,39 +146,59 @@ pre-commit install --all
 В дальнейшем при выполнении команды `git commit` будут выполняться проверки перечисленные в файле `.pre-commit-config.yaml`.
 
 
-5. Запуск базы
+5. Запуск backend сервера expert_system (после запуска всего проекта в контейнерах Docker)
 
-#### 1. Создать .env файл из env.example (в папках bot, expert_system и в корневой)
+#### 1. Изменить значение DB_HOST на "localhost" в expert_system/.env
 
-#### 2. Запустить Docker
-
-#### 3. Изменить значение DB_HOST на "localhost" в .env (в папках expert_system и в корневой)
-
-#### 4. Поднимаем контейнер с базой Postgres:
+#### 2. Войти в папку expert_system
 ```bash
-docker-compose -f postgres-local.yaml up -d --build
+cd expert_system
+```
+#### 3. Войти в оболочку виртуального окружения poetry
+```bash
+poetry shell
 ```
 
-### 2. Запуск проекта в контейнерах Docker
-
-#### 1. Создать .env файл из env.example (в папках bot, expert_system и в корневой)
-
-#### 2. Запустить Docker
-
-#### 4. Поднимаем контейнеры:
-```bash
-docker-compose up -d --build
+#### 4. Запустить локальный backend сервер expert_system
+```poetry
+python manage.py runserver
 ```
-### Локальные адреса проекта:
+#### 5. Адреса API локального backend сервера expert_system
+
+Локальные адреса проекта:
+
 Главная страница
 ```
-http://127.0.0.1/
+http://127.0.0.1:8000/
 ```
 Админка Django
 ```
-http://127.0.0.1/admin/
+http://127.0.0.1/admin:8000/
 ```
 Адрес API
 ```
-http://127.0.0.1/api/
+http://127.0.0.1/api:8000/
+```
+
+
+6. Запуск telegram-bot (после запуска всего проекта в контейнерах Docker)
+
+#### 1. Остановите контейнер "bot_container" в Docker
+```bash
+docker stop bot_container
+```
+
+#### 2. Войти в папку bot
+```bash
+cd bot
+```
+
+#### 3. Войти в оболочку виртуального окружения poetry
+```bash
+poetry shell
+```
+
+#### 4. Войти в оболочку виртуального окружения poetry
+```poetry
+python telegram_bot.py
 ```
