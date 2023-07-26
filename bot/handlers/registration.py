@@ -2,7 +2,7 @@ from telegram import InlineKeyboardMarkup
 from telegram.ext import CallbackQueryHandler, CommandHandler
 
 from config import BOT_URL, CHAT_ID
-from constants import callback_data, commands, constant, keyboards, messages
+from constants import callback_data, constant, keyboards, messages
 from handlers import menu
 from services import aio_client
 
@@ -23,7 +23,9 @@ async def subscription_callback(update, context):
     subscribe = await aio_client.get(BOT_URL, data)
     if subscribe["result"]["status"] == "member":
         await aio_client.post(constant.REQUEST_TELEGRAM_USER_URL, data)
-        await menu.menu_callback(update, context)
+        await menu.menu_callback(
+            update, context, message=messages.HELLO_MESSAGE
+        )
     else:
         await context.bot.send_message(
             chat_id=update.effective_user.id,
@@ -33,7 +35,7 @@ async def subscription_callback(update, context):
 
 
 def registration_handlers(app):
-    app.add_handler(CommandHandler(commands.START, start_callback))
+    app.add_handler(CommandHandler("start", start_callback))
     app.add_handler(
         CallbackQueryHandler(
             subscription_callback, pattern=callback_data.CHECK_SUBSCRIPTION

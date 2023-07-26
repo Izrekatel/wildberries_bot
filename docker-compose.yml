@@ -85,6 +85,18 @@ services:
       - static_value:/var/html/staticfiles/
     depends_on:
       - expert_system
+      - selenium_chrome
+
+  selenium_chrome:
+    container_name: selenium_chrome_container
+    restart: always
+    image: selenium/standalone-chrome:4.10.0-20230614
+    shm_size: 2gb
+    environment:
+      - SE_SUB_PATH=/selenium-grid/
+      - START_XVFB=false
+      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_OVERRIDE_MAX_SESSIONS=true
 
 volumes:
   postgres-data:

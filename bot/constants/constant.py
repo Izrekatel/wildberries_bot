@@ -4,18 +4,27 @@ TELEGRAM_CHANEL_SUBSCRIBE = "https://t.me/dbfsfg"
 # После получения доступа к каналу подписки с правами админа
 # TELEGRAM_CHANEL_SUBSCRIBE = 'https://t.me/mpexperts'
 
-URL = "localhost"
-REQUEST_POSITION_URL = f"http://{URL}/api/request_position/"
-REQUEST_STOCK_URL = f"http://{URL}/api/request_stock/"
-REQUEST_RATE_URL = f"http://{URL}/api/request_rate/"
-REQUEST_TELEGRAM_USER_URL = f"http://{URL}/api/telegram_user/"
+BACKEND_URL = "nginx"
+# BACKEND_URL = "localhost"
+# if you start local telegram_bot change BACKEND_URL=localhost
+
+REQUEST_POSITION_URL = f"http://{BACKEND_URL}/api/request_position/"
+REQUEST_STOCK_URL = f"http://{BACKEND_URL}/api/request_stock/"
+REQUEST_RATE_URL = f"http://{BACKEND_URL}/api/request_rate/"
+REQUEST_TELEGRAM_USER_URL = f"http://{BACKEND_URL}/api/telegram_user/"
+MY_SUBSCRIPTIONS_URL = f"http://{BACKEND_URL}/api/my_subscriptions/"
+
+SELENIUM_URL = f"http://{BACKEND_URL}/selenium-grid/"
+
 POSITION_PATTERN = r"^(?P<articul>\d+)(?P<phrase>(\s+[a-zA-Zа-яА-ЯёЁ]+)+)"
 
 # Parser constants.
 MAIN_URL = "https://www.wildberries.ru"
-BROWSER_LOADING_TIME = 1
-GEO_LOADING_TIME = 8
-SCROLL_LOADING_TIME = 0.5
+BROWSER_LOADING_TIME = 5.0
+GEO_LOADING_TIME = 10.0
+SCROLL_LOADING_TIME = 1.0
+MAX_ADDITIONAL_PAGES_SEARCHING = 4
+GOODS_ON_PAGE = 100
 CITY = {
     "Санкт-Петербург": "Санкт-Петербург, метро Сенная площадь",
     "Москва": "Москва, метро Лубянка",
