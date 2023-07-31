@@ -48,10 +48,23 @@ RATE_MESSAGE = (
     "Например:\n"
     "507"
 )
+INCORRECT_POSITION_INPUT_MESSAGE = (
+    "Запросите позицию в формате артикул(цифры) и запрос (текст)."
+)
+INCORRECT_STORE_INPUT_MESSAGE = (
+    "ID склада указан некорректно. Укажите только цифры."
+)
+INCORRECT_ARTICLE_INPUT_MESSAGE = (
+    "Артикул указан некорректно. Укажите только цифры."
+)
 RATE_RESULT_MESSAGE = "Коэффицианта приемки для склада {} составляет {}"
 SUBSCRIPTIONS_MESSAGE = "Ваши подписки: {}"
 UNKNOWN_COMMAND_MESSAGE = "Неизвестная команда, воспользуйтесь меню"
 TO_MAIN_MENU_MESSAGE = "Спасибо за подписку!"
 ARTICUL_NOT_FOUND_MESSAGE = (
     "Артикул *{}* по поисковому запросу *{}* не найден."
+)
+NO_STORE_MESSAGE = "Нет склдада с номером {}."
+STORE_RATE_RESULT_MESSAGE = (
+    "Коэффицианты приемки:\nМонопаллет: {}\nСуперсейф: {}\nКороб: {}\n"
 )

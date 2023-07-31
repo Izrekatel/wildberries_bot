@@ -11,43 +11,34 @@ from handlers import menu
 from services import wh_ratio
 
 
-async def rate_callback(update, context):
-    """Функция-обработчик для кнопки Отслеживание коэффицианта приемки WB"""
+async def rate_callback(update, context, text=messages.RATE_MESSAGE):
+    """Функция-обработчик для кнопки Отслеживание коэффицианта приемки WB."""
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=messages.RATE_MESSAGE,
+        text=text,
         reply_markup=InlineKeyboardMarkup(keyboards.CANCEL_BUTTON),
     )
     return states.RATE_RESULT
 
 
-async def rate_result_callback(update, context):
-    """Функция-вывод результата Отслеживание коэффициента приемки WB"""
-    parser_result = await wh_ratio.full_search(update.message.text)
-    result = await prepare_answer(parser_result)
-    if result is None:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=messages.UNKNOWN_COMMAND_MESSAGE,
-            reply_markup=InlineKeyboardMarkup(keyboards.MENU_BUTTON),
-        )
-    else:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text=result,
-            reply_markup=InlineKeyboardMarkup(keyboards.MENU_BUTTON),
-        )
-    return states.END
-
-
-async def prepare_answer(parser_result):
-    answer = (
-        f"Коэффицианты приемки:\nМонопаллет: "
-        f'{parser_result.get("Монопаллет")}\nСуперсейф: '
-        f'{parser_result.get("Суперсейф")}\nКороб: '
-        f'{parser_result.get("Короб")}\n'
+async def rate_incorrent_callback(update, context):
+    """Функция-обработчик для некорректного ввода номера склада."""
+    await rate_callback(
+        update, context, text=messages.INCORRECT_STORE_INPUT_MESSAGE
     )
-    return answer
+
+
+async def rate_result_callback(update, context):
+    """Функция-вывод результата Отслеживание коэффициента приемки WB."""
+    parser_result = await wh_ratio.full_search(int(update.message.text))
+    if not parser_result:
+        parser_result = messages.NO_STORE_MESSAGE.format(update.message.text)
+    await context.bot.send_message(
+        chat_id=update.effective_chat.id,
+        text=parser_result,
+        reply_markup=InlineKeyboardMarkup(keyboards.MENU_BUTTON),
+    )
+    return states.END
 
 
 rate_conv = ConversationHandler(
@@ -56,7 +47,8 @@ rate_conv = ConversationHandler(
     ],
     states={
         states.RATE_RESULT: [
-            MessageHandler(filters.TEXT, rate_result_callback)
+            MessageHandler(filters.Regex(r"^\d+$"), rate_result_callback),
+            MessageHandler(filters.TEXT, rate_incorrent_callback),
         ]
     },
     fallbacks=[

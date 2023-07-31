@@ -11,20 +11,27 @@ from handlers import menu
 from services import aio_client, stock
 
 
-async def stock_callback(update, context):
+async def stock_callback(update, context, text=messages.STOCK_MESSAGE):
     """Функция-обработчик для кнопки Парсер остатков."""
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
-        text=messages.STOCK_MESSAGE,
+        text=text,
         reply_markup=InlineKeyboardMarkup(keyboards.CANCEL_BUTTON),
     )
     return states.STOCK_RESULT
 
 
+async def stock_incorrent_callback(update, context):
+    """Функция-обработчик для некорректного ввода номера склада."""
+    await stock_callback(
+        update, context, text=messages.INCORRECT_ARTICLE_INPUT_MESSAGE
+    )
+
+
 async def stock_result_callback(update, context):
     """Функция-вывода результатов парсинга по артикулу"""
     parser_result = await stock.stock_parser(article=update.message.text)
-    result = await prepare_result(parser_result)
+    result = prepare_result(parser_result)
     user_data = {"articul": update.message.text}
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
@@ -35,7 +42,7 @@ async def stock_result_callback(update, context):
     return states.END
 
 
-async def prepare_result(parser_result):
+def prepare_result(parser_result):
     answer = "Результат:\nОстатки по складам\n\n"
     if parser_result:
         for elem in parser_result:
@@ -53,19 +60,14 @@ async def prepare_result(parser_result):
     return answer
 
 
-async def cancel_stock_callback(update, context):
-    """Функция-обработчик для кнопки отмена."""
-    await menu.menu_callback(update, context)
-    return states.END
-
-
 stock_conv = ConversationHandler(
     entry_points=[
         CallbackQueryHandler(stock_callback, pattern=callback_data.GET_STOCK)
     ],
     states={
         states.STOCK_RESULT: [
-            MessageHandler(filters.Regex(r"^\d+$"), stock_result_callback)
+            MessageHandler(filters.Regex(r"^\d+$"), stock_result_callback),
+            MessageHandler(filters.TEXT, stock_incorrent_callback),
         ]
     },
     fallbacks=[

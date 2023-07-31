@@ -20,6 +20,10 @@ MENU_BUTTON = [
     [InlineKeyboardButton("Перейти в меню", callback_data=callback_data.MENU)],
 ]
 
+CANCEL_BUTTON = [
+    [InlineKeyboardButton("Отмена", callback_data=callback_data.MENU)],
+]
+
 MENU_KEYBOARD = [
     [
         InlineKeyboardButton(
@@ -43,10 +47,6 @@ MENU_KEYBOARD = [
             callback_data=callback_data.GET_POSITION_SUBSCRIPTIONS,
         )
     ],
-]
-
-CANCEL_BUTTON = [
-    [InlineKeyboardButton("Отмена", callback_data=callback_data.MENU)],
 ]
 
 POSITION_REQUEST_BUTTON = [

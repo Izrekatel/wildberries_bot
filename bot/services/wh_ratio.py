@@ -1,25 +1,26 @@
-import aiohttp
-import json
+from typing import Optional
+
+from constants import messages
+
+from . import aio_client
 
 
-def prepare_url(url, wh_id):
-    """Подготавливает для зарпоса URL. Передаём в него ID склада"""
+def prepare_url(wh_id: int) -> str:
+    """Подготавливает URL для зарпоса."""
+    url = "https://wbcon.ru/wp-admin/admin-ajax.php?action=get_limit_store&id="
     return url + str(wh_id)
 
 
-def set_cookie():
-    """Устанавливает необходимые куки"""
-    cookies = {
-        'beget': 'begetok'
-    }
-    headers = {'Cookie': '; '.join([f'{k}={v}' for k, v in cookies.items()])}
+def add_cookies_in_headers() -> dict[str, str]:
+    """Создает необходимые headers."""
+    cookies = {"beget": "begetok"}
+    headers = {"Cookie": "; ".join([f"{k}={v}" for k, v in cookies.items()])}
     return headers
 
 
-def check_response(response):
-    """Проверяем полученный ответ, т.к при запросе склада, которого """
+def check_response(response: dict) -> Optional[dict]:
+    """Проверяем полученный ответ, т.к при запросе склада, которого"""
     """не существует, всё равно возвращается статус код 200"""
-    response = json.loads(response)
     try:
         response = response["detail"]
         return None
@@ -27,44 +28,37 @@ def check_response(response):
         return response
 
 
-def prepare_result(text):
+def prepare_result(response: dict) -> str:
     """Парсим ответ"""
     """Пробуем получить коэффициенты и устанавливаем значение "Недоступно"""
     """если данный вид упаковки недоступен"""
     try:
-        mono_pallet = text["mono_pallet"][0]["coefficient"]
+        mono_pallet = response["mono_pallet"][0]["coefficient"]
     except IndexError:
         mono_pallet = "Недоступно"
 
     try:
-        super_safe = text["super_safe"][0]["coefficient"]
+        super_safe = response["super_safe"][0]["coefficient"]
     except IndexError:
         super_safe = "Недоступно"
 
     try:
-        koroba = text["koroba"][0]["coefficient"]
+        koroba = response["koroba"][0]["coefficient"]
     except IndexError:
         koroba = "Недоступно"
 
-    result = {
-        "Монопаллет": mono_pallet,
-        "Суперсейф": super_safe,
-        "Короб": koroba,
-    }
+    result = messages.STORE_RATE_RESULT_MESSAGE.format(
+        mono_pallet, super_safe, koroba
+    )
     return result
 
 
-async def full_search(wh_id):
-    url = "https://wbcon.ru/wp-admin/admin-ajax.php?action=get_limit_store&id="
-    prepared_url = prepare_url(url, wh_id)
-    cookie = set_cookie()
-
-    async with aiohttp.ClientSession() as session:
-        response = await session.get(prepared_url, headers=cookie)
-        response = await response.text()
-        response = check_response(response)
-        if response:
-            result = prepare_result(response)
-            return result
-        else:
-            print("Некорректный запрос склада")
+async def full_search(wh_id: int) -> Optional[str]:
+    url = prepare_url(wh_id)
+    headers = add_cookies_in_headers()
+    response = await aio_client.get(url=url, headers=headers)
+    checked_response = check_response(response)
+    result = None
+    if checked_response:
+        result = prepare_result(checked_response)
+    return result
