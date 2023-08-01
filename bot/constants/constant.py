@@ -20,11 +20,12 @@ POSITION_PATTERN = r"^(?P<articul>\d+)(?P<phrase>(\s+[a-zA-Zа-яА-ЯёЁ]+)+)"
 
 # Parser constants.
 MAIN_URL = "https://www.wildberries.ru"
-BROWSER_LOADING_TIME = 5.0
-GEO_LOADING_TIME = 10.0
-SCROLL_LOADING_TIME = 1.0
+BROWSER_LOADING_TIME = 3.0
+GEO_LOADING_TIME = 8.0
+SCROLL_LOADING_TIME = 0.5
 MAX_ADDITIONAL_PAGES_SEARCHING = 4
 GOODS_ON_PAGE = 100
+
 CITY = {
     "Санкт-Петербург": "Санкт-Петербург, метро Сенная площадь",
     "Москва": "Москва, метро Лубянка",
@@ -33,6 +34,7 @@ CITY = {
     "Екатеринбург": "Екатеринбург центр",
     "Владивосток": "город Владивосток",
 }
+
 WAREHOUSES = {
     1733: "Екатеринбург",
     507: "Коледино",

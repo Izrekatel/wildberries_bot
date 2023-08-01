@@ -1,5 +1,6 @@
 from telegram import InlineKeyboardMarkup
 from telegram.ext import (
+    Application,
     CallbackQueryHandler,
     ConversationHandler,
     MessageHandler,
@@ -23,7 +24,7 @@ async def stock_callback(update, context, text=messages.STOCK_MESSAGE):
 
 async def stock_incorrent_callback(update, context):
     """Функция-обработчик для некорректного ввода номера склада."""
-    await stock_callback(
+    return await stock_callback(
         update, context, text=messages.INCORRECT_ARTICLE_INPUT_MESSAGE
     )
 
@@ -36,27 +37,27 @@ async def stock_result_callback(update, context):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=result,
-        reply_markup=InlineKeyboardMarkup(keyboards.MENU_BUTTON),
+        reply_markup=InlineKeyboardMarkup(keyboards.MENU_KEYBOARD),
     )
     await aio_client.post(constant.REQUEST_STOCK_URL, user_data)
     return states.END
 
 
-def prepare_result(parser_result):
+def prepare_result(parser_result: list) -> str:
+    """Функция подготовки результата парсера по артикулу."""
     answer = "Результат:\nОстатки по складам\n\n"
-    if parser_result:
-        for elem in parser_result:
-            size = elem.get("Название")
-            whs = elem.get("Склады")
-            if size:
-                answer += f"Размеры {size}:\n"
-            for wh in whs:
-                id = wh.get("ID Склада")
-                ammount = wh.get("Количество")
-                answer += f"{constant.WAREHOUSES.get(id)}: {ammount} шт.\n"
-            answer += "\n"
-    else:
-        answer += "отсуствуют."
+    if not parser_result:
+        return answer + "отсуствуют."
+    for elem in parser_result:
+        size = elem.get("Название")
+        whs = elem.get("Склады")
+        if size:
+            answer += f"Размеры {size}:\n"
+        for wh in whs:
+            id = wh.get("ID Склада")
+            ammount = wh.get("Количество")
+            answer += f"{constant.WAREHOUSES.get(id)}: {ammount} шт.\n"
+        answer += "\n"
     return answer
 
 
@@ -71,14 +72,11 @@ stock_conv = ConversationHandler(
         ]
     },
     fallbacks=[
-        CallbackQueryHandler(
-            menu.cancel_callback, pattern=callback_data.CANCEL
-        ),
-        CallbackQueryHandler(menu.menu_callback, pattern=callback_data.MENU),
+        CallbackQueryHandler(menu.cancel, pattern=callback_data.CANCEL),
     ],
     allow_reentry=True,
 )
 
 
-def stock_handlers(app):
+def stock_handlers(app: Application) -> None:
     app.add_handler(stock_conv)

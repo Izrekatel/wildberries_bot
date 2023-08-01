@@ -6,7 +6,7 @@ async def get(url: str, data=None, params=None, headers=None) -> dict:
         response = await session.get(
             url=url, data=data, params=params, headers=headers
         )
-        data = await response.json()
+        data = await response.json(content_type=None)
         await session.close()
         return data
 
