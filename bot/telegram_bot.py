@@ -2,7 +2,7 @@ import asyncio
 import logging
 
 import aiohttp
-from telegram.ext import Application
+from telegram.ext import Application, MessageHandler, filters
 
 from config import BOT_TOKEN
 from constants.messages import START_BOT_DESCRIPTION_MESSAGE
@@ -39,6 +39,7 @@ def main():
     stock.stock_handlers(bot)
     rate.rate_handlers(bot)
     subscriptions.subscriptions_handlers(bot)
+    bot.add_handler(MessageHandler(filters.TEXT, menu.send_text_in_menu))
     bot.run_polling()
 
 

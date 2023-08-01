@@ -21,7 +21,7 @@ MENU_BUTTON = [
 ]
 
 CANCEL_BUTTON = [
-    [InlineKeyboardButton("Отмена", callback_data=callback_data.MENU)],
+    [InlineKeyboardButton("Отмена", callback_data=callback_data.CANCEL)],
 ]
 
 MENU_KEYBOARD = [
@@ -76,7 +76,7 @@ POSITION_SUBSCRIPTION_KEYBOARD = [
     [
         InlineKeyboardButton(
             "Отменить подписку и перейти в меню",
-            callback_data=callback_data.MENU,
+            callback_data=callback_data.CANCEL,
         )
     ],
 ]

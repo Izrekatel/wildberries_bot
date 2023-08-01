@@ -1,5 +1,6 @@
 from telegram import InlineKeyboardMarkup
 from telegram.ext import (
+    Application,
     CallbackQueryHandler,
     ConversationHandler,
     MessageHandler,
@@ -23,7 +24,7 @@ async def rate_callback(update, context, text=messages.RATE_MESSAGE):
 
 async def rate_incorrent_callback(update, context):
     """Функция-обработчик для некорректного ввода номера склада."""
-    await rate_callback(
+    return await rate_callback(
         update, context, text=messages.INCORRECT_STORE_INPUT_MESSAGE
     )
 
@@ -36,7 +37,7 @@ async def rate_result_callback(update, context):
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=parser_result,
-        reply_markup=InlineKeyboardMarkup(keyboards.MENU_BUTTON),
+        reply_markup=InlineKeyboardMarkup(keyboards.MENU_KEYBOARD),
     )
     return states.END
 
@@ -52,14 +53,11 @@ rate_conv = ConversationHandler(
         ]
     },
     fallbacks=[
-        CallbackQueryHandler(
-            menu.cancel_callback, pattern=callback_data.CANCEL
-        ),
-        CallbackQueryHandler(menu.menu_callback, pattern=callback_data.MENU),
+        CallbackQueryHandler(menu.cancel, pattern=callback_data.CANCEL),
     ],
     allow_reentry=True,
 )
 
 
-def rate_handlers(app):
+def rate_handlers(app: Application) -> None:
     app.add_handler(rate_conv)

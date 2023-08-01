@@ -5,6 +5,7 @@ from constants import callback_data, keyboards
 
 # from constants import callback_data, constant, keyboards, messages
 # from services import aio_client
+# from handlers import menu
 
 
 async def subscriptions_callback(update, context):
@@ -15,11 +16,11 @@ async def subscriptions_callback(update, context):
         chat_id=update.effective_chat.id,
         text=data,
         # text=messages.SUBSCRIPTIONS_MESSAGE.format(subscriptions),
-        reply_markup=InlineKeyboardMarkup(keyboards.MENU_BUTTON),
+        reply_markup=InlineKeyboardMarkup(keyboards.MENU_KEYBOARD),
     )
 
 
-def subscriptions_handlers(app: Application) -> Application:
+def subscriptions_handlers(app: Application) -> None:
     app.add_handler(
         CallbackQueryHandler(
             subscriptions_callback,
