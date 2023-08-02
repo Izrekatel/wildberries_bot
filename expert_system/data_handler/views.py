@@ -1,23 +1,27 @@
+from rest_framework import generics, viewsets
+
 from api.serializers import (
+    FrequencyRequestPositionSerializer,
     RequestPositionSerializer,
     RequestRateSerializer,
     RequestStockSerializer,
     TelegramUserSerializer,
 )
 from data_handler.models import (
+    FrequencyRequestPosition,
     RequestPosition,
     RequestRate,
     RequestStock,
     TelegramUser,
 )
-from rest_framework import generics
 
 
-class RequestPositionViewSet(generics.CreateAPIView):
-    """Добавление Position в БД."""
+class RequestPositionViewSet(viewsets.ModelViewSet):
+    """Добавление, редактирование, удаление Position в БД."""
 
     serializer_class = RequestPositionSerializer
     queryset = RequestPosition.objects.all()
+    lookup_field = "telegram_user"
 
 
 class RequestStockViewSet(generics.CreateAPIView):
@@ -34,8 +38,17 @@ class RequestRateViewSet(generics.CreateAPIView):
     queryset = RequestRate.objects.all()
 
 
-class TelegramUserViewSet(generics.CreateAPIView):
-    """Добавление TelegramUser в БД."""
+class FrequencyRequestPositionViewSet(viewsets.ModelViewSet):
+    """Добавление Rate в БД."""
+
+    serializer_class = FrequencyRequestPositionSerializer
+    queryset = FrequencyRequestPosition.objects.all()
+    lookup_field = "frequency"
+
+
+class TelegramUserViewSet(viewsets.ModelViewSet):
+    """Добавление, редактирование, удаление TelegramUser в БД."""
 
     serializer_class = TelegramUserSerializer
     queryset = TelegramUser.objects.all()
+    lookup_field = "user_id"
