@@ -1,5 +1,5 @@
-COMMAND_NAME = "@..."
-BOT_NAME = "No name Bot"
+COMMAND_NAME = "@Gelrud_Boris"
+BOT_NAME = "WildberriesBot"
 TELEGRAM_CHANEL_SUBSCRIBE = "https://t.me/dbfsfg"
 # После получения доступа к каналу подписки с правами админа
 # TELEGRAM_CHANEL_SUBSCRIBE = 'https://t.me/mpexperts'
@@ -8,11 +8,11 @@ BACKEND_URL = "nginx"
 # BACKEND_URL = "localhost"
 # if you start local telegram_bot change BACKEND_URL=localhost
 
+FREQUENCY_URL = f"http://{BACKEND_URL}/api/frequency/"
 REQUEST_POSITION_URL = f"http://{BACKEND_URL}/api/request_position/"
 REQUEST_STOCK_URL = f"http://{BACKEND_URL}/api/request_stock/"
 REQUEST_RATE_URL = f"http://{BACKEND_URL}/api/request_rate/"
 REQUEST_TELEGRAM_USER_URL = f"http://{BACKEND_URL}/api/telegram_user/"
-MY_SUBSCRIPTIONS_URL = f"http://{BACKEND_URL}/api/my_subscriptions/"
 
 SELENIUM_URL = f"http://{BACKEND_URL}/selenium-grid/"
 
@@ -20,12 +20,14 @@ POSITION_PATTERN = r"^(?P<articul>\d+)(?P<phrase>(\s+[a-zA-Zа-яА-ЯёЁ]+)+)"
 
 # Parser constants.
 MAIN_URL = "https://www.wildberries.ru"
-BROWSER_LOADING_TIME = 3.0
-GEO_LOADING_TIME = 8.0
-SCROLL_LOADING_TIME = 0.5
+BROWSER_LOADING_TIME = 15.0
+GEO_LOADING_TIME = 15.0
+SCROLL_LOADING_TIME = 2.0
 MAX_ADDITIONAL_PAGES_SEARCHING = 4
 GOODS_ON_PAGE = 100
 
+# CITY сделать моделью, добавить связь с пользователем,
+# сделать выбор городов-подписок.
 CITY = {
     "Санкт-Петербург": "Санкт-Петербург, метро Сенная площадь",
     "Москва": "Москва, метро Лубянка",
@@ -35,6 +37,7 @@ CITY = {
     "Владивосток": "город Владивосток",
 }
 
+# WAREHOUSES сделать моделью, выяснить откуда данные и заполнить.
 WAREHOUSES = {
     1733: "Екатеринбург",
     507: "Коледино",
