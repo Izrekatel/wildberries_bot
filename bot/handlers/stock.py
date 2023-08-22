@@ -33,14 +33,22 @@ async def stock_result_callback(update, context):
     """Функция-вывода результатов парсинга по артикулу"""
     parser_result = await stock.stock_parser(article=update.message.text)
     result = prepare_result(parser_result)
-    user_data = {"articul": update.message.text}
+    user_data = {
+        "articul": update.message.text,
+        "user_id": update.effective_user.id,
+    }
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=result,
         reply_markup=InlineKeyboardMarkup(keyboards.MENU_KEYBOARD),
     )
-    await aio_client.post(constant.REQUEST_STOCK_URL, user_data)
+    await stock_request_to_db(user_data)
     return states.END
+
+
+async def stock_request_to_db(user_data: dict) -> None:
+    """Добавление запроса остатков к БД."""
+    await aio_client.post(constant.REQUEST_STOCK_URL, data=user_data)
 
 
 def prepare_result(parser_result: list) -> str:

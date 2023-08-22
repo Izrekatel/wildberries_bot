@@ -1,12 +1,36 @@
 from django.contrib import admin
 
 from .models import (
+    City,
     FrequencyRequestPosition,
     RequestPosition,
     RequestRate,
     RequestStock,
     TelegramUser,
+    Warehouse,
 )
+
+
+@admin.register(City)
+class CityAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "city",
+        "location",
+    )
+    list_display_links = (
+        "city",
+        "location",
+    )
+    search_fields = (
+        "id",
+        "city",
+        "location",
+    )
+    list_filter = (
+        "city",
+        "location",
+    )
 
 
 @admin.register(FrequencyRequestPosition)
@@ -53,7 +77,7 @@ class RequestPositionAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "add_time",
-        "telegram_user",
+        "user_id",
         "articul",
         "text",
         "frequency",
@@ -62,7 +86,7 @@ class RequestPositionAdmin(admin.ModelAdmin):
     search_fields = (
         "id",
         "add_time",
-        "telegram_user",
+        "user_id",
         "articul",
         "text",
         "frequency",
@@ -70,7 +94,7 @@ class RequestPositionAdmin(admin.ModelAdmin):
     )
     list_filter = (
         "add_time",
-        "telegram_user",
+        "user_id",
         "articul",
         "text",
         "frequency",
@@ -83,18 +107,18 @@ class RequestRateAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "add_time",
-        "telegram_user",
+        "user_id",
         "warehouse_id",
     )
     search_fields = (
         "id",
         "add_time",
-        "telegram_user",
+        "user_id",
         "warehouse_id",
     )
     list_filter = (
         "add_time",
-        "telegram_user",
+        "user_id",
         "warehouse_id",
     )
 
@@ -104,17 +128,39 @@ class RequestStockAdmin(admin.ModelAdmin):
     list_display = (
         "id",
         "add_time",
-        "telegram_user",
+        "user_id",
         "articul",
     )
     search_fields = (
         "id",
         "add_time",
-        "telegram_user",
+        "user_id",
         "articul",
     )
     list_filter = (
         "add_time",
-        "telegram_user",
+        "user_id",
         "articul",
+    )
+
+
+@admin.register(Warehouse)
+class WarehouseAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "number",
+        "name",
+    )
+    list_display_links = (
+        "number",
+        "name",
+    )
+    search_fields = (
+        "id",
+        "number",
+        "name",
+    )
+    list_filter = (
+        "number",
+        "name",
     )

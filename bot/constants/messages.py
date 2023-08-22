@@ -58,7 +58,8 @@ INCORRECT_ARTICLE_INPUT_MESSAGE = (
     "Артикул указан некорректно. Укажите только цифры."
 )
 RATE_RESULT_MESSAGE = "Коэффицианта приемки для склада {} составляет {}"
-SUBSCRIPTIONS_MESSAGE = "Ваши подписки: {}"
+SUBSCRIPTIONS_MESSAGE = "Ваши подписки:\n{}"
+NO_SUBSCRIPTIONS_MESSAGE = "У Вас не оформленно действующих подписок."
 UNKNOWN_COMMAND_MESSAGE = "Неизвестная команда, воспользуйтесь меню"
 TO_MAIN_MENU_MESSAGE = "Спасибо за подписку!"
 ARTICUL_NOT_FOUND_MESSAGE = (

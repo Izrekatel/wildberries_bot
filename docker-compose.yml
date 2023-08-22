@@ -91,11 +91,11 @@ services:
     container_name: selenium_chrome_container
     restart: always
     image: selenium/standalone-chrome:4.10.0-20230614
-    shm_size: 2gb
+    shm_size: 4gb
     environment:
       - SE_SUB_PATH=/selenium-grid/
       - START_XVFB=false
-      - SE_NODE_MAX_SESSIONS=2
+      - SE_NODE_MAX_SESSIONS=10
       - SE_NODE_OVERRIDE_MAX_SESSIONS=true
 
 volumes:

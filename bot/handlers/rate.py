@@ -7,9 +7,9 @@ from telegram.ext import (
     filters,
 )
 
-from constants import callback_data, keyboards, messages, states
+from constants import callback_data, constant, keyboards, messages, states
 from handlers import menu
-from services import wh_ratio
+from services import aio_client, wh_ratio
 
 
 async def rate_callback(update, context, text=messages.RATE_MESSAGE):
@@ -32,6 +32,10 @@ async def rate_incorrent_callback(update, context):
 async def rate_result_callback(update, context):
     """Функция-вывод результата Отслеживание коэффициента приемки WB."""
     parser_result = await wh_ratio.full_search(int(update.message.text))
+    user_data = {
+        "warehouse_id": update.message.text,
+        "user_id": update.effective_user.id,
+    }
     if not parser_result:
         parser_result = messages.NO_STORE_MESSAGE.format(update.message.text)
     await context.bot.send_message(
@@ -39,7 +43,13 @@ async def rate_result_callback(update, context):
         text=parser_result,
         reply_markup=InlineKeyboardMarkup(keyboards.MENU_KEYBOARD),
     )
+    await rate_request_to_db(user_data)
     return states.END
+
+
+async def rate_request_to_db(user_data: dict) -> None:
+    """Добавление запроса оэффициента приемки WB к БД."""
+    await aio_client.post(constant.REQUEST_RATE_URL, data=user_data)
 
 
 rate_conv = ConversationHandler(
