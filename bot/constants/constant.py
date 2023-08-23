@@ -4,15 +4,17 @@ TELEGRAM_CHANEL_SUBSCRIBE = "https://t.me/dbfsfg"
 # После получения доступа к каналу подписки с правами админа
 # TELEGRAM_CHANEL_SUBSCRIBE = 'https://t.me/mpexperts'
 
-BACKEND_URL = "nginx"
-# BACKEND_URL = "localhost"
+# BACKEND_URL = "nginx"
+BACKEND_URL = "localhost"
 # if you start local telegram_bot change BACKEND_URL=localhost
 
+CITY_URL = f"http://{BACKEND_URL}/api/city/"
 FREQUENCY_URL = f"http://{BACKEND_URL}/api/frequency/"
 REQUEST_POSITION_URL = f"http://{BACKEND_URL}/api/request_position/"
 REQUEST_STOCK_URL = f"http://{BACKEND_URL}/api/request_stock/"
 REQUEST_RATE_URL = f"http://{BACKEND_URL}/api/request_rate/"
 REQUEST_TELEGRAM_USER_URL = f"http://{BACKEND_URL}/api/telegram_user/"
+WAREHOUSE_URL = f"http://{BACKEND_URL}/api/warehouse/"
 
 SELENIUM_URL = f"http://{BACKEND_URL}/selenium-grid/"
 

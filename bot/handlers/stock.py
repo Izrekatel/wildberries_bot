@@ -32,7 +32,7 @@ async def stock_incorrent_callback(update, context):
 async def stock_result_callback(update, context):
     """Функция-вывода результатов парсинга по артикулу"""
     parser_result = await stock.stock_parser(article=update.message.text)
-    result = prepare_result(parser_result)
+    result = await prepare_result(parser_result)
     user_data = {
         "articul": update.message.text,
         "user_id": update.effective_user.id,
@@ -51,7 +51,15 @@ async def stock_request_to_db(user_data: dict) -> None:
     await aio_client.post(constant.REQUEST_STOCK_URL, data=user_data)
 
 
-def prepare_result(parser_result: list) -> str:
+async def get_warehouse_name(id: str) -> str:
+    """Получение названия склада из БД по номеру."""
+    warehouse = await aio_client.get(f"{constant.WAREHOUSE_URL}{id}")
+    if warehouse.get("name"):
+        return warehouse["name"]
+    return f"Склад №{id}"
+
+
+async def prepare_result(parser_result: list) -> str:
     """Функция подготовки результата парсера по артикулу."""
     answer = "Результат:\nОстатки по складам\n\n"
     if not parser_result:
@@ -64,7 +72,8 @@ def prepare_result(parser_result: list) -> str:
         for wh in whs:
             id = wh.get("ID Склада")
             ammount = wh.get("Количество")
-            answer += f"{constant.WAREHOUSES.get(id)}: {ammount} шт.\n"
+            warehouse_name = await get_warehouse_name(id)
+            answer += f"{warehouse_name}: {ammount} шт.\n"
         answer += "\n"
     return answer
 

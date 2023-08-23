@@ -84,3 +84,4 @@ class WarehouseViewSet(viewsets.ModelViewSet):
 
     serializer_class = WarehouseSerializer
     queryset = Warehouse.objects.all()
+    lookup_field = "number"
